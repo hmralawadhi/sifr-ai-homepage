@@ -1,0 +1,1 @@
+document.getElementById('sifr-chat').innerText = 'SIFR-AI chat interface loading...';
