@@ -1,4 +1,4 @@
-name: Auto Deploy
+name: Auto Deploy from SIFR-AI
 
 on:
   push:
@@ -8,13 +8,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
       with:
-        persist-credentials: false  # we’ll use our own token
-    - name: Push from SIFR-AI
+        persist-credentials: false  # we'll use our own token for pushing
+
+    - name: Configure Git and Push Changes
       run: |
-        git config user.name "sifr-ai"
-        git config user.email "deploy@sifr-ai.com"
+        git config --global user.name "sifr-ai"
+        git config --global user.email "deploy@sifr-ai.com"
         git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hmralawadhi/sifr-ai-homepage.git
         git add .
         git commit -m "Autonomous push from SIFR-AI" || echo "No changes to commit"
