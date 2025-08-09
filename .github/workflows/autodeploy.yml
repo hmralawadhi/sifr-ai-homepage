@@ -1,25 +1,33 @@
-name: Auto Deploy from SIFR-AI
+name: Auto Deploy
 
 on:
   push:
     branches: [ main ]
+  schedule:
+    - cron: "*/5 * * * *" # Every 5 minutes
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
-        persist-credentials: false  # we'll use our own token for pushing
+        token: ${{ secrets.GH_TOKEN }}
 
-    - name: Configure Git and Push Changes
+    - name: Push from SIFR-AI
       run: |
-        git config --global user.name "sifr-ai"
-        git config --global user.email "deploy@sifr-ai.com"
-        git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hmralawadhi/sifr-ai-homepage.git
+        git config user.name "sifr-ai"
+        git config user.email "deploy@sifr-ai.com"
+        git pull origin main --rebase
         git add .
         git commit -m "Autonomous push from SIFR-AI" || echo "No changes to commit"
-        git push origin main
+        git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hmralawadhi/sifr-ai-homepage.git main
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    - name: Trigger Cloudflare Pages Deploy
+      run: |
+        curl -X POST "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects/${{ secrets.CLOUDFLARE_PROJECT_NAME }}/deployments" \
+        -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+        -H "Content-Type: application/json" \
+        --data '{}'
