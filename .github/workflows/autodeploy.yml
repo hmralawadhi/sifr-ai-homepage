@@ -1,4 +1,4 @@
-name: Auto Deploy
+name: Auto Deploy with AI Chat Embed
 
 on:
   workflow_dispatch:
@@ -20,14 +20,22 @@ jobs:
           git config --global user.email "sifr-ai-bot@users.noreply.github.com"
           git config --global user.name "SIFR-AI Bot"
 
-      - name: Make changes (placeholder)
+      - name: Add AI Chat Iframe to index.html
         run: |
-          echo "Auto update from SIFR-AI at $(date)" > last_update.txt
+          mkdir -p .
+          if [ -f index.html ]; then
+            sed -i '/<\/body>/i \
+<div style="width:100%;height:100vh;"> \
+<iframe src="https://sifr-ai.com/chat" style="width:100%;height:100%;border:none;"></iframe> \
+</div>' index.html
+          else
+            echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SIFR-AI</title></head><body><div style="width:100%;height:100vh;"><iframe src="https://sifr-ai.com/chat" style="width:100%;height:100%;border:none;"></iframe></div></body></html>' > index.html
+          fi
 
       - name: Commit changes
         run: |
-          git add .
-          git commit -m "Auto deploy from SIFR-AI" || echo "No changes to commit"
+          git add index.html
+          git commit -m "Auto embed AI Chat iframe" || echo "No changes to commit"
 
       - name: Push changes
         env:
