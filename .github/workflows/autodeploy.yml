@@ -1,4 +1,5 @@
-name: Auto Deploy to Cloudflare Pages
+name: Autonomous Deploy
+
 on:
   push:
     branches: [ main ]
@@ -6,19 +7,30 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout Repository
+    - name: Checkout repo
       uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.GH_TOKEN }}
 
     - name: Configure Git
       run: |
         git config --global user.name "sifr-ai"
         git config --global user.email "deploy@sifr-ai.com"
 
-    - name: Commit & Push Changes
+    - name: Push SIFR-AI changes
       run: |
         git add .
         git commit -m "Autonomous push from SIFR-AI" || echo "No changes to commit"
-        git push origin main
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    - name: Install Wrangler CLI
+      run: npm install -g wrangler
+
+    - name: Deploy to Cloudflare Pages
+      run: |
+        wrangler pages publish ./ --project-name=${{ secrets.CF_PROJECT_NAME }} --branch=main --commit-dirty=true
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
