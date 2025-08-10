@@ -1,39 +1,24 @@
-name: Deploy to Cloudflare Pages
-
+name: Auto Deploy to Cloudflare Pages
 on:
   push:
-    branches:
-      - main  # Deploy whenever main branch changes
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      deployments: write
     steps:
-      # 1. Checkout repo
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GH_TOKEN }}
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GH_TOKEN }}
 
-      # 2. Install Node (needed for Cloudflare CLI)
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+    - name: Configure Git
+      run: |
+        git config --global user.name "sifr-ai"
+        git config --global user.email "deploy@sifr-ai.com"
 
-      # 3. Install Wrangler (Cloudflare CLI)
-      - name: Install Wrangler
-        run: npm install -g wrangler
-
-      # 4. Deploy to Cloudflare Pages
-      - name: Publish to Cloudflare Pages
-        run: |
-          wrangler pages publish ./ \
-            --project-name=sifr-ai-homepage \
-            --branch=main
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    - name: Commit & Push Changes
+      run: |
+        git add .
+        git commit -m "Autonomous push from SIFR-AI" || echo "No changes to commit"
+        git push origin main
