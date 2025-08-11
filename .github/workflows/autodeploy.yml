@@ -1,42 +1,38 @@
-name: Autonomous SIFR-AI Deploy
+name: Autonomous Deploy
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GH_TOKEN }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Build site
-        run: npm run build
+    - name: Build project
+      run: npm run build
 
-      - name: Auto-detect build folder
-        id: detect
-        run: |
-          if [ -d "dist" ]; then
-            echo "FOLDER=dist" >> $GITHUB_ENV
-          elif [ -d "build" ]; then
-            echo "FOLDER=build" >> $GITHUB_ENV
-          else
-            echo "❌ No dist or build folder found."
-            exit 1
-          fi
-
-      - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy $FOLDER --project-name=<YOUR_CF_PROJECT_NAME>
-        env:
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    - name: Publish to Cloudflare Pages
+      run: |
+        npm install -g wrangler
+        wrangler pages publish ./dist \
+          --project-name=${{ secrets.CF_PROJECT_NAME }} \
+          --account-id=${{ secrets.CF_ACCOUNT_ID }} \
+          --api-token=${{ secrets.CF_API_TOKEN }}
