@@ -1,36 +1,42 @@
-name: Autonomous Deploy
+name: Autonomous SIFR-AI Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Configure Git
-      run: |
-        git config --global user.name "sifr-ai"
-        git config --global user.email "deploy@sifr-ai.com"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Push SIFR-AI changes
-      run: |
-        git add .
-        git commit -m "Autonomous push from SIFR-AI" || echo "No changes to commit"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Install dependencies
+        run: npm install
 
-    - name: Install Wrangler CLI
-      run: npm install -g wrangler
+      - name: Build site
+        run: npm run build
 
-    - name: Deploy to Cloudflare Pages
-      run: |
-        wrangler pages publish ./ --project-name=${{ secrets.CF_PROJECT_NAME }} --branch=main --commit-dirty=true
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      - name: Auto-detect build folder
+        id: detect
+        run: |
+          if [ -d "dist" ]; then
+            echo "FOLDER=dist" >> $GITHUB_ENV
+          elif [ -d "build" ]; then
+            echo "FOLDER=build" >> $GITHUB_ENV
+          else
+            echo "❌ No dist or build folder found."
+            exit 1
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        run: npx wrangler pages deploy $FOLDER --project-name=<YOUR_CF_PROJECT_NAME>
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
