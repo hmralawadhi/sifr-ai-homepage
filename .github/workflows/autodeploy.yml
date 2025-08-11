@@ -1,4 +1,4 @@
-name: Autonomous Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -9,13 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GH_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Install Wrangler
-        run: npm install -g wrangler
+      - name: Install Wrangler CLI
+        run: npm install -g wrangler@3
 
       - name: Publish to Cloudflare Pages
         run: wrangler pages publish . --project-name=sifr-ai-homepage --branch=main
