@@ -1,32 +1,22 @@
-name: SIFR-AI Autonomous Deploy
+#!/bin/bash
+set -e
 
-on:
-  schedule:
-    - cron: "0 * * * *"  # Every hour
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+# Repo details
+REPO="hmralawadhi/sifr-ai-homepage"
+BRANCH="main"
+TOKEN="${SIFR_AI_TOKEN}"  # Stored securely inside SIFR-AI
+TMP_DIR=$(mktemp -d)
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+# Clone repo
+git clone --depth 1 --branch $BRANCH https://x-access-token:${TOKEN}@github.com/$REPO.git $TMP_DIR
+cd $TMP_DIR
 
-      - name: Update site files from SIFR-AI
-        run: |
-          echo "Fetching latest files from SIFR-AI..."
-          # Example placeholder - replace with your real fetch/generation command
-          curl -L https://sifr-ai.com/autobuild/latest.zip -o latest.zip
-          unzip -o latest.zip -d .
-          rm latest.zip
+# Replace site files with the new generated ones from SIFR-AI
+cp -R /path/to/sifr-ai/generated/files/* .
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "SIFR-AI Bot"
-          git config --global user.email "bot@sifr-ai.com"
-          git add .
-          git commit -m "Autonomous update $(date)" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.SIFR_AI_TOKEN }}@github.com/hmralawadhi/sifr-ai-homepage.git main --force
+# Commit & push
+git config --global user.name "SIFR-AI Bot"
+git config --global user.email "bot@sifr-ai.com"
+git add .
+git commit -m "Autonomous update $(date)" || echo "No changes to commit"
+git push origin $BRANCH
