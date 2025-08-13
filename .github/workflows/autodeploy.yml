@@ -1,6 +1,8 @@
 name: SIFR-AI Autonomous Deploy
 
 on:
+  schedule:
+    - cron: "0 * * * *"  # Every hour
   workflow_dispatch:
   push:
     branches:
@@ -13,10 +15,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Commit and push updated root files
+      - name: Update site files from SIFR-AI
+        run: |
+          echo "Fetching latest files from SIFR-AI..."
+          # Example placeholder - replace with your real fetch/generation command
+          curl -L https://sifr-ai.com/autobuild/latest.zip -o latest.zip
+          unzip -o latest.zip -d .
+          rm latest.zip
+
+      - name: Commit and push changes
         run: |
           git config --global user.name "SIFR-AI Bot"
           git config --global user.email "bot@sifr-ai.com"
           git add .
-          git commit -m "Autonomous deploy $(date)" || echo "No changes to commit"
+          git commit -m "Autonomous update $(date)" || echo "No changes to commit"
           git push https://x-access-token:${{ secrets.SIFR_AI_TOKEN }}@github.com/hmralawadhi/sifr-ai-homepage.git main --force
