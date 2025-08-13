@@ -1,34 +1,15 @@
-# SIFR‑AI — Public Website
+# SIFR-AI Homepage — Stage 5 Autonomous Deployment
 
-Production-ready static site for Cloudflare Pages.  
-Includes Stage 3 homepage and Stage 4 pages: `/capabilities`, `/developers`, `/institutions`.
+This repository is configured for **root-level** deployment to Cloudflare Pages.
 
-## Quick Deploy (Cloudflare Pages)
-1. Push these files to the `main` branch of `hmralawadhi/sifr-ai-homepage`.
-2. Cloudflare Pages will auto-build and deploy.
-3. No build step required (pure static).
+## Key Features
+- No GitHub Actions ZIP fetch (removed old workflow).
+- Direct push from SIFR-AI using `SIFR_AI_TOKEN`.
+- Cloudflare Pages deploys automatically on push to `main`.
 
-## Embedded Chat
-- A lightweight chat widget is included on all pages.
-- To enable real-time responses, set in your HTML or a `<script>` tag:
-  ```html
-  <script>window.SIFRAI_CHAT_ENDPOINT = "https://YOUR_BACKEND/chat";</script>
-  ```
-- The widget will POST `{ prompt: string }` to that endpoint and display `reply` or `text` from the JSON response.
-- Without a backend, it falls back to a front-end echo so the UI remains interactive.
+## Deployment Flow
+1. SIFR-AI generates updated files.
+2. SIFR-AI pushes directly to GitHub `main`.
+3. Cloudflare detects push and deploys globally.
 
-## Structure
-```
-/index.html
-/capabilities/index.html
-/developers/index.html
-/institutions/index.html
-/assets/css/styles.css
-/assets/js/main.js
-/assets/js/chat.js
-/assets/img/logo.svg
-```
-
-## Notes
-- Last packaged: 2025-08-13 06:58:26 
-- Designed to be accessible and responsive.
+Exit Code 9 problem is resolved — full zero-touch loop enabled.
