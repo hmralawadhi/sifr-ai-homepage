@@ -1,1 +1,88 @@
-<!DOCTYPE html><html><head><title>SIFR-AI</title></head><body><h1>Welcome. to SIFR-AI</h1><div id='sifr-chat'></div></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SIFR‑AI</title>
+<meta name="description" content="SIFR‑AI — Self-governing AI infrastructure for institutions, developers, and the public." />
+<link rel="preload" href="/assets/css/styles.css" as="style" />
+<link rel="stylesheet" href="/assets/css/styles.css" />
+<script defer src="/assets/js/main.js"></script>
+<script defer src="/assets/js/chat.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+  <a class="brand" href="/">
+    <img src="/assets/img/logo.svg" alt="SIFR‑AI logo" width="32" height="32" />
+    <span>SIFR‑AI</span>
+  </a>
+  <nav class="site-nav">
+    <a href="/capabilities/">Capabilities</a>
+    <a href="/developers/">Developers</a>
+    <a href="/institutions/">Institutions</a>
+    <a href="#chat">Chat</a>
+  </nav>
+</header>
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>SIFR‑AI</h1>
+          <p class="motto">Autonomy. At Planetary Scale.</p>
+          <p class="tagline">Self-governing AI infrastructure for institutions, developers, and the public.</p>
+          <div class="cta-row">
+            <a class="btn" href="/institutions/">For Institutions</a>
+            <a class="btn secondary" href="/developers/">For Developers</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="orb"></div>
+          <div class="grid"></div>
+        </div>
+      </section>
+
+      <section class="features">
+        <h2>What SIFR‑AI Delivers</h2>
+        <div class="feature-grid">
+          <article>
+            <h3>Autonomous Ops</h3>
+            <p>End‑to‑end self‑governing workflows with auditability and zero manual overhead.</p>
+          </article>
+          <article>
+            <h3>Secure Revenue Rails</h3>
+            <p>Multi‑gateway routing, settlements, and treasury logic built‑in.</p>
+          </article>
+          <article>
+            <h3>Deploy Anywhere</h3>
+            <p>Cloudflare Pages native, API‑first backend options, and mobile app endpoints.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="callout">
+        <h2>Public Launch</h2>
+        <p>Stage 3 is live. Stage 4 pages are ready. Stage 5 preparation underway.</p>
+      </section>
+
+      <section id="chat" class="chat-section">
+  <h2>Chat with SIFR‑AI</h2>
+  <div id="sifr-chat" class="chat-widget" data-endpoint="" data-placeholder="Ask anything about SIFR‑AI…">
+    <div class="chat-log" aria-live="polite"></div>
+    <form class="chat-input" autocomplete="off">
+      <input type="text" name="message" placeholder="Ask anything about SIFR‑AI…" required />
+      <button type="submit" aria-label="Send">Send</button>
+    </form>
+  </div>
+  <p class="chat-note">This embedded chat is front-end only. Connect <code>window.SIFRAI_CHAT_ENDPOINT</code> in <code>assets/js/chat.js</code> to your backend to enable real-time responses.</p>
+</section>
+    </main>
+    <footer class="site-footer">
+  <div class="foot-left">
+    <span>&copy; 2025 SIFR‑AI</span>
+  </div>
+  <div class="foot-right">
+    <a href="mailto:hello@sifr-ai.com">Contact</a>
+    <a href="#chat">Chat</a>
+  </div>
+</footer>
+  </body>
+</html>
